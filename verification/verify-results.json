@@ -1,0 +1,252 @@
+[
+  {
+    "name": "mobile /: every scroll-reveal fired",
+    "ok": true,
+    "detail": "0 still hidden"
+  },
+  {
+    "name": "mobile /: no horizontal scroll",
+    "ok": true,
+    "detail": "overflow 0px"
+  },
+  {
+    "name": "mobile /: hero card for paradise links and is clear of the triad",
+    "ok": true,
+    "detail": "href=/sharda-paradise"
+  },
+  {
+    "name": "mobile /: hero card for greens links and is clear of the triad",
+    "ok": true,
+    "detail": "href=/sharda-greens"
+  },
+  {
+    "name": "mobile /: no console errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "mobile /about-us: every scroll-reveal fired",
+    "ok": true,
+    "detail": "0 still hidden"
+  },
+  {
+    "name": "mobile /about-us: no horizontal scroll",
+    "ok": true,
+    "detail": "overflow 0px"
+  },
+  {
+    "name": "mobile /about-us: no console errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "mobile /sharda-paradise: every scroll-reveal fired",
+    "ok": true,
+    "detail": "0 still hidden"
+  },
+  {
+    "name": "mobile /sharda-paradise: no horizontal scroll",
+    "ok": true,
+    "detail": "overflow 0px"
+  },
+  {
+    "name": "mobile /sharda-paradise: no console errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "mobile /sharda-greens: every scroll-reveal fired",
+    "ok": true,
+    "detail": "0 still hidden"
+  },
+  {
+    "name": "mobile /sharda-greens: no horizontal scroll",
+    "ok": true,
+    "detail": "overflow 0px"
+  },
+  {
+    "name": "mobile /sharda-greens: no console errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "mobile /thank-you: every scroll-reveal fired",
+    "ok": true,
+    "detail": "0 still hidden"
+  },
+  {
+    "name": "mobile /thank-you: no horizontal scroll",
+    "ok": true,
+    "detail": "overflow 0px"
+  },
+  {
+    "name": "mobile /thank-you: no console errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "desktop /: every scroll-reveal fired",
+    "ok": true,
+    "detail": "0 still hidden"
+  },
+  {
+    "name": "desktop /: no horizontal scroll",
+    "ok": true,
+    "detail": "overflow 0px"
+  },
+  {
+    "name": "desktop /: hero card for paradise links and is clear of the triad",
+    "ok": true,
+    "detail": "href=/sharda-paradise"
+  },
+  {
+    "name": "desktop /: hero card for greens links and is clear of the triad",
+    "ok": true,
+    "detail": "href=/sharda-greens"
+  },
+  {
+    "name": "desktop /: no console errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "desktop /about-us: every scroll-reveal fired",
+    "ok": true,
+    "detail": "0 still hidden"
+  },
+  {
+    "name": "desktop /about-us: no horizontal scroll",
+    "ok": true,
+    "detail": "overflow 0px"
+  },
+  {
+    "name": "desktop /about-us: no console errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "desktop /sharda-paradise: every scroll-reveal fired",
+    "ok": true,
+    "detail": "0 still hidden"
+  },
+  {
+    "name": "desktop /sharda-paradise: no horizontal scroll",
+    "ok": true,
+    "detail": "overflow 0px"
+  },
+  {
+    "name": "desktop /sharda-paradise: no console errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "desktop /sharda-greens: every scroll-reveal fired",
+    "ok": true,
+    "detail": "0 still hidden"
+  },
+  {
+    "name": "desktop /sharda-greens: no horizontal scroll",
+    "ok": true,
+    "detail": "overflow 0px"
+  },
+  {
+    "name": "desktop /sharda-greens: no console errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "desktop /thank-you: every scroll-reveal fired",
+    "ok": true,
+    "detail": "0 still hidden"
+  },
+  {
+    "name": "desktop /thank-you: no horizontal scroll",
+    "ok": true,
+    "detail": "overflow 0px"
+  },
+  {
+    "name": "desktop /thank-you: no console errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "internal links resolve",
+    "ok": true,
+    "detail": "5 unique: /, /sharda-paradise, /sharda-greens, /about-us, /privacy-policy"
+  },
+  {
+    "name": "tel links use +919179200110",
+    "ok": true,
+    "detail": "tel:+919179200110"
+  },
+  {
+    "name": "WhatsApp links use wa.me/919179200110",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "form: empty submit shows inline errors",
+    "ok": true,
+    "detail": "3 errors"
+  },
+  {
+    "name": "form: invalid fields have aria-describedby",
+    "ok": true,
+    "detail": "3"
+  },
+  {
+    "name": "form: Sharda Greens pre-selected on Greens page",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "form: mobile input normalises +91 paste",
+    "ok": true,
+    "detail": "9876543210"
+  },
+  {
+    "name": "form: success navigates to /thank-you?project=greens",
+    "ok": true,
+    "detail": "http://localhost:4173/thank-you?project=greens"
+  },
+  {
+    "name": "form: payload carries UTM/gclid + landing page",
+    "ok": true,
+    "detail": "{\"name\":\"Test Buyer\",\"mobile\":\"+919876543210\",\"project\":\"greens\",\"visit_date\":\"\",\"consent\":true,\"utm_source\":\"google\",\"utm_medium\":\"\",\"utm_campaign\":\"greens-test\",\"utm_term\":\"\",\"utm_content\":\"\",\"gclid\":\"abc123\",\"fbclid\":"
+  },
+  {
+    "name": "thank-you: conversion recorded once",
+    "ok": true,
+    "detail": "[\"6d981e17-5d19-4276-9f5b-1d416359b4f4\"]"
+  },
+  {
+    "name": "thank-you: refresh does not re-fire",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "form flow: no page errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "reduced motion mobile: all content visible, motion off",
+    "ok": true,
+    "detail": "0 hidden"
+  },
+  {
+    "name": "reduced motion mobile: no page errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "reduced motion desktop: all content visible, motion off",
+    "ok": true,
+    "detail": "0 hidden"
+  },
+  {
+    "name": "reduced motion desktop: no page errors",
+    "ok": true,
+    "detail": ""
+  }
+]

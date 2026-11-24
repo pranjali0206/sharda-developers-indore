@@ -1,0 +1,11 @@
+{
+  "/": {
+    "performance": 72,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "LCP": "1.5 s",
+    "CLS": "0",
+    "TBT": "1,340 ms"
+  }
+}
