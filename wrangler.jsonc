@@ -1,0 +1,16 @@
+// Static-assets-only Worker: `npm run build` pre-renders every route into ./dist,
+// and Cloudflare serves those files as-is. Having this file stops Wrangler's
+// auto-configuration, which would otherwise inject @cloudflare/vite-plugin and
+// break the SSR pre-render step.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sharda-developers-website",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    // /about → about.html or about/index.html (both are written by prerender.mjs)
+    "html_handling": "auto-trailing-slash",
+    // Unknown paths get the pre-rendered dist/404.html with a 404 status.
+    "not_found_handling": "404-page"
+  }
+}

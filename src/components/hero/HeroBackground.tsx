@@ -33,7 +33,7 @@ export function HeroBackground() {
             height={sky.height}
             loading="eager"
             decoding="async"
-            className="absolute inset-[-24px] h-[calc(100%+48px)] w-[calc(100%+48px)] object-cover object-top opacity-45 [filter:blur(6px)] [mask-image:linear-gradient(to_bottom,black_0%,black_45%,transparent_92%)]"
+            className="absolute inset-[-24px] h-[calc(100%+48px)] w-[calc(100%+48px)] max-w-none object-cover object-top opacity-45 [filter:blur(6px)] [mask-image:linear-gradient(to_bottom,black_0%,black_45%,transparent_92%)]"
           />
         </picture>
       )}
@@ -83,6 +83,16 @@ export function HeroBackground() {
           className="absolute inset-x-0 bottom-0 h-[13%] min-h-[80px] w-full object-cover object-bottom"
         />
       </picture>
+
+      {/* phones/tablets: soft green ground wave under the cards */}
+      <svg
+        viewBox="0 0 390 60"
+        preserveAspectRatio="none"
+        className="absolute inset-x-0 bottom-0 h-[52px] w-full lg:hidden"
+      >
+        <path d="M0 26 C 110 2, 250 4, 390 18 L390 60 L0 60 Z" fill="#fff" fillOpacity="0.7" />
+        <path d="M0 38 C 120 16, 260 18, 390 30 L390 60 L0 60 Z" className="fill-green-700" />
+      </svg>
     </div>
   );
 }

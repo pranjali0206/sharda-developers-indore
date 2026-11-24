@@ -32,6 +32,15 @@ const env = await readEnv();
 const SITE_URL = (env.VITE_SITE_URL ?? '').replace(/\/$/, '');
 
 const template = await readFile(path.join(DIST, 'index.html'), 'utf8');
+try {
+  await readFile(SSR);
+} catch {
+  throw new Error(
+    `SSR bundle not found at ${SSR}. If this is a Cloudflare build, make sure wrangler.jsonc ` +
+      'is committed — without it Wrangler auto-injects @cloudflare/vite-plugin, which turns the ' +
+      '`vite build --ssr` step into a client build with a hashed filename.',
+  );
+}
 const { render, ROUTES, images } = await import(pathToFileURL(SSR).href);
 // Home hero: preload the two project-card gate photos (sizes match the cards).
 const sizesFor = (name) => images[name].widths;
@@ -40,8 +49,8 @@ const set = (name) =>
     .map((w) => `/assets/optimized/${name}-${w}.avif ${w}w`)
     .join(', ');
 const heroPreload = [
-  `<link rel="preload" as="image" type="image/avif" imagesrcset="${set('paradise-gate')}" imagesizes="(min-width: 1024px) 720px, (min-width: 640px) 60vw, 100vw" fetchpriority="high">`,
-  `<link rel="preload" as="image" type="image/avif" imagesrcset="${set('g-gate-day')}" imagesizes="(min-width: 1024px) 720px, (min-width: 640px) 60vw, 100vw">`,
+  `<link rel="preload" as="image" type="image/avif" imagesrcset="${set('paradise-gate')}" imagesizes="(min-width: 1024px) 720px, 66vw" fetchpriority="high">`,
+  `<link rel="preload" as="image" type="image/avif" imagesrcset="${set('g-gate-day')}" imagesizes="(min-width: 1024px) 720px, 66vw">`,
 ].join('\n');
 
 function page(url) {
