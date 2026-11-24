@@ -6,7 +6,9 @@
  * Swapping in hi-res originals from the client = drop the file in public/assets with
  * the same name and re-run `npm run images`. Larger widths are generated automatically.
  */
-import { readdir, mkdir, stat, unlink, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { readdir, mkdir, readFile, stat, unlink, writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 
@@ -16,8 +18,15 @@ const OUT = path.join(SRC, 'optimized');
 const PHOTO_WIDTHS = [480, 768, 1200, 1600, 2000];
 const LOGO_WIDTHS = [200, 400, 800];
 
+const CACHE = path.join(OUT, '.cache.json');
+
 const isLogo = (name) => name.includes('logo') || name.includes('mark');
 
+/**
+ * Variants are committed to git, so a fresh clone (CI / Cloudflare) must not re-encode them.
+ * File mtimes are meaningless after a clone, so freshness is keyed on the source's content hash.
+ * Legacy fallback: with no cache entry yet, trust outputs that are newer than the source (local dev).
+ */
 async function newer(src, out) {
   try {
     const [a, b] = await Promise.all([stat(src), stat(out)]);
@@ -28,8 +37,11 @@ async function newer(src, out) {
 }
 
 await mkdir(OUT, { recursive: true });
+const cache = existsSync(CACHE) ? JSON.parse(await readFile(CACHE, 'utf8')) : {};
+const nextCache = {};
 const files = (await readdir(SRC)).filter((f) => /\.(jpe?g|png)$/i.test(f));
 const manifest = {};
+let encoded = 0;
 
 for (const file of files) {
   const name = file.replace(/\.(jpe?g|png)$/i, '');
@@ -41,11 +53,17 @@ for (const file of files) {
     widths.push(Math.min(meta.width, base.at(-1)));
   }
   widths = [...new Set(widths)].sort((a, b) => a - b);
+  const hash = createHash('sha1')
+    .update(await readFile(src))
+    .digest('hex');
+  nextCache[file] = hash;
 
   for (const w of widths) {
     for (const fmt of ['avif', 'webp']) {
       const out = path.join(OUT, `${name}-${w}.${fmt}`);
-      if (await newer(src, out)) continue;
+      if (existsSync(out) && (cache[file] === hash || (!cache[file] && (await newer(src, out)))))
+        continue;
+      encoded++;
       const img = sharp(src).resize({ width: w, withoutEnlargement: true });
       if (fmt === 'avif')
         await img.avif({ quality: isLogo(name) ? 70 : 52, effort: 5 }).toFile(out);
@@ -62,6 +80,9 @@ for (const file of files) {
   console.warn(`✓ ${name} ${meta.width}×${meta.height} → ${widths.join('/')}`);
 }
 
+await writeFile(CACHE, JSON.stringify(nextCache, null, 2) + '\n');
+console.warn(`Encoded ${encoded} new variant(s); the rest were up to date.`);
+
 // Prune variants that no longer belong to any source (replaced or removed originals).
 const expected = new Set(
   Object.entries(manifest).flatMap(([name, m]) =>
@@ -69,7 +90,7 @@ const expected = new Set(
   ),
 );
 for (const f of await readdir(OUT)) {
-  if (!expected.has(f)) {
+  if (f !== '.cache.json' && !expected.has(f)) {
     await unlink(path.join(OUT, f));
     console.warn(`pruned ${f}`);
   }
