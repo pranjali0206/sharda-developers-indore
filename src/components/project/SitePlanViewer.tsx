@@ -2,7 +2,6 @@ import { useCallback, useRef, useState, type PointerEvent as RPointerEvent } fro
 import { Minus, Plus, RotateCcw } from 'lucide-react';
 import type { ImageName } from '../../generated/images';
 import { Img } from '../ui/Img';
-import { ArtistLabel } from '../ui/primitives';
 
 const MIN = 1;
 const MAX = 4;
@@ -140,7 +139,6 @@ export function SitePlanViewer({ image, alt }: { image: ImageName; alt: string }
             className="h-full w-full select-none object-contain p-3"
           />
         </div>
-        <ArtistLabel />
       </div>
       <div
         className="absolute right-4 top-4 flex flex-col gap-2"

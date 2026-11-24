@@ -8,14 +8,7 @@ import { Journey } from '../components/about/Journey';
 import { VisitSection } from '../components/form/VisitSection';
 import { Deferred } from '../components/layout/Deferred';
 import { Img } from '../components/ui/Img';
-import {
-  ArtistLabel,
-  Eyebrow,
-  HindiLine,
-  Punch,
-  SectionHeading,
-  StatusChip,
-} from '../components/ui/primitives';
+import { Eyebrow, HindiLine, Punch, SectionHeading, StatusChip } from '../components/ui/primitives';
 
 const d = (s: number) => ({ '--d': `${s}s` }) as CSSProperties;
 
@@ -98,7 +91,6 @@ export function AboutPage() {
                 priority
                 className="h-full w-full object-cover"
               />
-              <ArtistLabel className="bottom-auto left-auto right-3 top-3" />
             </div>
             <div className="absolute -bottom-6 left-4 flex items-center gap-4 rounded-2xl bg-white px-5 py-4 shadow-card ring-1 ring-line sm:left-8">
               <span>

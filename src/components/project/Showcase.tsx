@@ -121,7 +121,6 @@ export function Showcase({ project }: { project: Project }) {
       <div className="mt-8 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center">
         <p className="text-sm text-white/70">
           {project.gallery.length} views of {project.name} · Tap any image to view it full screen.
-          Images are artist&rsquo;s impressions.
         </p>
         <a
           href="#visit"

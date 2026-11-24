@@ -25,6 +25,7 @@ export default {
       greens: { 600: c['greens-600'], 50: c['greens-50'] },
       whatsapp: c.whatsapp,
       birds: c.birds,
+      sky: { top: c['sky-top'], horizon: c['sky-horizon'] },
       bg: c.bg,
       cream: c.cream,
       mint: c.mint,

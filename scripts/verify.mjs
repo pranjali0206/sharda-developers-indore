@@ -114,25 +114,32 @@ try {
       check(`${vp.name} ${route}: no horizontal scroll`, overflow <= 0, `overflow ${overflow}px`);
 
       if (route === '/') {
-        // Hero: both project cards link to their pages, and the cards don't overlap the triad logos.
+        // Hero: both project panels link to their pages and don't cover the headline.
         const hero = await page.evaluate(() => {
-          const cards = ['paradise', 'greens'].map((slug) => {
-            const el = document.querySelector(`[data-hero-card="${slug}"]`);
-            return { slug, href: el?.getAttribute('href'), r: el?.getBoundingClientRect() };
-          });
-          const logos = [
-            ...document.querySelectorAll('[data-section="hero"] a[aria-label] img'),
-          ].map((img) => img.getBoundingClientRect());
+          const h1 = document.querySelector('[data-section="hero"] h1')?.getBoundingClientRect();
           const overlap = (a, b) =>
-            a && b && a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
-          return cards.map((c) => ({
-            slug: c.slug,
-            ok: c.href === `/sharda-${c.slug}` && !logos.some((l) => overlap(l, c.r)),
-            d: `href=${c.href}`,
-          }));
+            a &&
+            b &&
+            a.left < b.right - 1 &&
+            b.left < a.right - 1 &&
+            a.top < b.bottom - 1 &&
+            b.top < a.bottom - 1;
+          return ['paradise', 'greens'].map((slug) => {
+            const el = document.querySelector(`[data-hero-card="${slug}"]`);
+            const href = el?.getAttribute('href');
+            return {
+              slug,
+              ok: href === `/sharda-${slug}` && !overlap(h1, el?.getBoundingClientRect()),
+              d: `href=${href}`,
+            };
+          });
         });
         for (const h of hero)
-          check(`${vp.name} /: hero card for ${h.slug} links and is clear of the triad`, h.ok, h.d);
+          check(
+            `${vp.name} /: hero panel for ${h.slug} links and is clear of the headline`,
+            h.ok,
+            h.d,
+          );
       }
 
       // content-visibility:auto sections are skipped by full-page capture; render them all.

@@ -33,17 +33,15 @@ const SITE_URL = (env.VITE_SITE_URL ?? '').replace(/\/$/, '');
 
 const template = await readFile(path.join(DIST, 'index.html'), 'utf8');
 const { render, ROUTES, images } = await import(pathToFileURL(SSR).href);
-// Home hero: preload the three triad layers and the backdrop photo (art-directed).
+// Home hero: preload the two project-card gate photos (sizes match the cards).
 const sizesFor = (name) => images[name].widths;
 const set = (name) =>
   sizesFor(name)
     .map((w) => `/assets/optimized/${name}-${w}.avif ${w}w`)
     .join(', ');
 const heroPreload = [
-  ...['top', 'left', 'right'].map(
-    (n) => `<link rel="preload" as="image" href="/assets/triad-${n}.svg" type="image/svg+xml">`,
-  ),
-  `<link rel="preload" as="image" type="image/avif" imagesrcset="${set('hero-skyline')}" imagesizes="115vw">`,
+  `<link rel="preload" as="image" type="image/avif" imagesrcset="${set('paradise-gate')}" imagesizes="(min-width: 1024px) 720px, (min-width: 640px) 60vw, 100vw" fetchpriority="high">`,
+  `<link rel="preload" as="image" type="image/avif" imagesrcset="${set('g-gate-day')}" imagesizes="(min-width: 1024px) 720px, (min-width: 640px) 60vw, 100vw">`,
 ].join('\n');
 
 function page(url) {

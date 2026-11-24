@@ -1,144 +1,88 @@
-import { site } from '../../content/site';
 import { images } from '../../generated/images';
 
 const OPT = '/assets/optimized';
-const srcset = (name: keyof typeof images, fmt: 'avif' | 'webp') =>
-  images[name].widths.map((w) => `${OPT}/${name}-${w}.${fmt} ${w}w`).join(', ');
-
-function Birds() {
-  return (
-    <>
-      {/* desktop */}
-      <svg
-        viewBox="0 0 140 50"
-        fill="none"
-        className="absolute right-[120px] top-[110px] hidden h-[50px] w-[140px] opacity-50 lg:block"
-      >
-        <path
-          d="M10 30 q8 -9 16 0 q8 -9 16 0"
-          className="stroke-birds"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-        />
-        <path
-          d="M60 14 q6 -7 12 0 q6 -7 12 0"
-          className="stroke-birds"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-        <path
-          d="M100 36 q5 -6 10 0 q5 -6 10 0"
-          className="stroke-birds"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-        />
-      </svg>
-      {/* mobile / tablet */}
-      <svg
-        viewBox="0 0 90 40"
-        fill="none"
-        className="absolute right-2 top-[150px] h-8 w-[72px] opacity-50 lg:hidden"
-      >
-        <path
-          d="M6 26 q6 -7 12 0 q6 -7 12 0"
-          className="stroke-birds"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-        <path
-          d="M44 12 q5 -6 10 0 q5 -6 10 0"
-          className="stroke-birds"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-        />
-        <path
-          d="M66 30 q4 -5 8 0 q4 -5 8 0"
-          className="stroke-birds"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-        />
-      </svg>
-    </>
-  );
-}
-
-function Wave() {
-  return (
-    <>
-      <svg
-        viewBox="0 0 1440 220"
-        preserveAspectRatio="none"
-        className="absolute inset-x-0 bottom-0 hidden h-[190px] w-full lg:block"
-      >
-        <defs>
-          <linearGradient id="hero-wave-d" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor="#2F7D45" stopOpacity="0.55" />
-            <stop offset="1" stopColor="#1D5E33" stopOpacity="0.85" />
-          </linearGradient>
-        </defs>
-        <path d="M0 150 C 360 60, 760 210, 1440 70 L1440 220 L0 220 Z" fill="url(#hero-wave-d)" />
-        <path
-          d="M0 120 C 420 40, 820 170, 1440 40"
-          fill="none"
-          stroke="rgba(255,255,255,.7)"
-          strokeWidth="2"
-        />
-      </svg>
-      <svg
-        viewBox="0 0 390 120"
-        preserveAspectRatio="none"
-        className="absolute inset-x-0 bottom-[68px] h-[110px] w-full md:bottom-0 lg:hidden"
-      >
-        <defs>
-          <linearGradient id="hero-wave-m" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor="#2F7D45" stopOpacity="0.45" />
-            <stop offset="1" stopColor="#1D5E33" stopOpacity="0.9" />
-          </linearGradient>
-        </defs>
-        <path d="M0 90 C 120 40, 230 110, 390 30 L390 120 L0 120 Z" fill="url(#hero-wave-m)" />
-        <path
-          d="M0 72 C 130 24, 240 92, 390 14"
-          fill="none"
-          stroke="rgba(255,255,255,.75)"
-          strokeWidth="1.6"
-        />
-      </svg>
-    </>
-  );
-}
+const foliage = images['hero-foliage'];
+/**
+ * Optional sky photo: drop it in as public/assets/hero-sky.jpg and run `npm run images`.
+ * Shown faded and softly blurred over the gradient sky; until then the gradient is used.
+ */
+type ImgMeta = { src: string; width: number; height: number; widths: readonly number[] };
+const sky = (images as unknown as Record<string, ImgMeta | undefined>)['hero-sky'];
+const skySet = (fmt: 'avif' | 'webp') =>
+  sky ? sky.widths.map((w) => `${OPT}/hero-sky-${w}.${fmt} ${w}w`).join(', ') : '';
+const set = (fmt: 'avif' | 'webp') =>
+  foliage.widths.map((w) => `${OPT}/hero-foliage-${w}.${fmt} ${w}w`).join(', ');
 
 /**
- * Hero backdrop, bottom to top: real photo (blurred) → white wash → sun glow → birds →
- * green wave. One <picture> with art direction (desktop / phone crops), so only one
- * photo downloads.
+ * Hero backdrop: open sky (soft blue → near-white), a few very soft clouds, two
+ * hairline gold curves across the lower third, and an out-of-focus foliage band
+ * along the bottom (blur baked into the image, fading up into the sky).
  */
 export function HeroBackground() {
-  const { image } = site.home.hero.photo;
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-      {/* Skyline: blur is baked into the file; motion is transform-only (slow pan + zoom). */}
-      <div className="hero-sky-in absolute inset-0">
-        <div className="hero-pan absolute inset-[-6%]">
-          <picture>
-            <source type="image/avif" srcSet={srcset(image, 'avif')} sizes="115vw" />
-            <source type="image/webp" srcSet={srcset(image, 'webp')} sizes="115vw" />
-            <img
-              src={images[image].src}
-              alt=""
-              width={images[image].width}
-              height={images[image].height}
-              loading="eager"
-              decoding="async"
-              {...{ fetchpriority: 'high' }}
-              className="h-full w-full object-cover object-[50%_62%] lg:object-[center_58%]"
-            />
-          </picture>
-        </div>
-      </div>
-      <div className="hero-wash absolute inset-0" />
-      <div className="hero-sun absolute right-[-120px] top-[-100px] h-[380px] w-[380px] rounded-full lg:right-[-160px] lg:top-[-160px] lg:h-[640px] lg:w-[640px]" />
-      <Birds />
-      <Wave />
+      <div className="hero-sky absolute inset-0" />
+      {sky && (
+        <picture>
+          <source type="image/avif" srcSet={skySet('avif')} sizes="100vw" />
+          <source type="image/webp" srcSet={skySet('webp')} sizes="100vw" />
+          <img
+            src={sky.src}
+            alt=""
+            width={sky.width}
+            height={sky.height}
+            loading="eager"
+            decoding="async"
+            className="absolute inset-[-24px] h-[calc(100%+48px)] w-[calc(100%+48px)] object-cover object-top opacity-45 [filter:blur(6px)] [mask-image:linear-gradient(to_bottom,black_0%,black_45%,transparent_92%)]"
+          />
+        </picture>
+      )}
+
+      {/* light wash behind the text column keeps navy/green text crisp over the sky */}
+      <div className="hero-text-wash absolute inset-0" />
+
+      {/* soft clouds */}
+      <div className="hero-cloud absolute left-[-8%] top-[8%] h-[34%] w-[46%]" />
+      <div className="hero-cloud absolute right-[-6%] top-[2%] h-[30%] w-[40%] opacity-80" />
+      <div className="hero-cloud absolute left-[30%] top-[30%] h-[22%] w-[36%] opacity-60" />
+
+      {/* hairline gold curves */}
+      <svg
+        viewBox="0 0 1440 300"
+        preserveAspectRatio="none"
+        className="absolute inset-x-0 bottom-[6%] h-[34%] w-full"
+        fill="none"
+      >
+        <path
+          d="M-20 210 C 360 120, 760 260, 1460 120"
+          className="stroke-gold-400"
+          strokeWidth="1"
+          strokeOpacity="0.3"
+          vectorEffect="non-scaling-stroke"
+        />
+        <path
+          d="M-20 250 C 420 170, 900 290, 1460 170"
+          className="stroke-gold-400"
+          strokeWidth="1"
+          strokeOpacity="0.22"
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+
+      {/* out-of-focus foliage band */}
+      <picture>
+        <source type="image/avif" srcSet={set('avif')} sizes="100vw" />
+        <source type="image/webp" srcSet={set('webp')} sizes="100vw" />
+        <img
+          src={foliage.src}
+          alt=""
+          width={foliage.width}
+          height={foliage.height}
+          loading="eager"
+          decoding="async"
+          className="absolute inset-x-0 bottom-0 h-[13%] min-h-[80px] w-full object-cover object-bottom"
+        />
+      </picture>
     </div>
   );
 }

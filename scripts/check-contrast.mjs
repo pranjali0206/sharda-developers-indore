@@ -108,12 +108,6 @@ const blended = [
   ],
   [over(t('white'), 0.6, t('navy-950')), t('navy-950'), 'body', 'white/60 disclaimer in footer'],
   [over(t('white'), 0.65, t('navy-950')), t('navy-950'), 'body', 'white/65 footer secondary'],
-  [
-    t('white'),
-    over(t('navy-950'), 0.7, t('white')),
-    'body',
-    "Artist's impression label over a white image area (worst case)",
-  ],
 ];
 
 let fail = 0;

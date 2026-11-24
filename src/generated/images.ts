@@ -10,6 +10,56 @@ export const images = {
     ],
     "alpha": false
   },
+  "film-connectivity-poster": {
+    "src": "/assets/film-connectivity-poster.jpg",
+    "width": 540,
+    "height": 960,
+    "widths": [
+      480,
+      540
+    ],
+    "alpha": false
+  },
+  "film-infrastructure-poster": {
+    "src": "/assets/film-infrastructure-poster.jpg",
+    "width": 540,
+    "height": 960,
+    "widths": [
+      480,
+      540
+    ],
+    "alpha": false
+  },
+  "film-life-poster": {
+    "src": "/assets/film-life-poster.jpg",
+    "width": 540,
+    "height": 960,
+    "widths": [
+      480,
+      540
+    ],
+    "alpha": false
+  },
+  "film-location-poster": {
+    "src": "/assets/film-location-poster.jpg",
+    "width": 540,
+    "height": 960,
+    "widths": [
+      480,
+      540
+    ],
+    "alpha": false
+  },
+  "film-tour-poster": {
+    "src": "/assets/film-tour-poster.jpg",
+    "width": 540,
+    "height": 960,
+    "widths": [
+      480,
+      540
+    ],
+    "alpha": false
+  },
   "g-aerial-boulevard": {
     "src": "/assets/g-aerial-boulevard.jpg",
     "width": 2400,
@@ -231,16 +281,26 @@ export const images = {
     ],
     "alpha": false
   },
-  "hero-skyline": {
-    "src": "/assets/hero-skyline.jpg",
+  "hero-foliage": {
+    "src": "/assets/hero-foliage.png",
     "width": 2400,
-    "height": 1350,
+    "height": 260,
     "widths": [
       480,
       768,
       1200,
       1600,
       2000
+    ],
+    "alpha": true
+  },
+  "hero-sky": {
+    "src": "/assets/hero-sky.jpg",
+    "width": 736,
+    "height": 460,
+    "widths": [
+      480,
+      736
     ],
     "alpha": false
   },

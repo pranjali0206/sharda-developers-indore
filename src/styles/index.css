@@ -363,25 +363,6 @@
     transform: none;
   }
 }
-@keyframes hero-pop {
-  from {
-    opacity: 0;
-    transform: scale(0.6);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-@keyframes hero-float {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
-  50% {
-    transform: translate3d(0, -7px, 0);
-  }
-}
 .motion-ok .hero-in {
   animation: hero-fade-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   animation-delay: var(--d, 0s);
@@ -400,107 +381,49 @@
   animation: hero-rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   animation-delay: var(--d, 0s);
 }
-.motion-ok .hero-pop {
-  animation: hero-pop 0.9s cubic-bezier(0.2, 0.8, 0.2, 1.15) both;
-  animation-delay: var(--d, 0s);
-}
-.motion-ok .hero-float {
-  animation: hero-float 5s ease-in-out var(--d, 1.8s) infinite;
-}
-/* Neon gradient border around each white logo circle (same effect as the project cards). */
-.disc-neon {
-  overflow: hidden;
-  /* thin ring on the disc edge (closest-side = the circle's own radius) */
-  -webkit-mask: radial-gradient(
-    closest-side,
-    transparent 91%,
-    #000 92%,
-    #000 99%,
-    transparent 100%
-  );
-  mask: radial-gradient(closest-side, transparent 91%, #000 92%, #000 99%, transparent 100%);
-}
-.disc-neon::before {
-  content: '';
-  position: absolute;
-  inset: -20%;
-  background: conic-gradient(from 0deg, var(--c1), var(--c2), var(--c3), var(--c1));
-}
-.motion-ok .disc-neon::before {
-  animation: fx-spin 6s linear infinite;
-}
-/* soft glow just outside the ring, never over the white disc */
-.disc-neon-glow {
-  background: conic-gradient(from 0deg, var(--c1), var(--c2), var(--c3), var(--c1));
-  filter: blur(8px);
-  opacity: 0.55;
-  -webkit-mask: radial-gradient(closest-side, transparent 80%, #000 88%, transparent 100%);
-  mask: radial-gradient(closest-side, transparent 80%, #000 88%, transparent 100%);
-}
-[data-paused] .disc-neon::before,
-[data-paused] .hero-float {
-  animation-play-state: paused;
-}
-
-/* Backdrop wash + sun (values from the approved design). */
-.hero-wash {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.93) 0%,
-    rgba(255, 255, 255, 0.84) 34%,
-    rgba(255, 250, 240, 0.55) 58%,
-    rgba(255, 250, 240, 0.8) 80%,
-    rgba(255, 250, 240, 0.92) 100%
-  );
-}
-.hero-sun {
-  background: radial-gradient(circle, rgba(255, 236, 196, 0.8) 0%, rgba(255, 236, 196, 0) 70%);
-}
-@media (min-width: 1024px) {
-  .hero-wash {
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.95) 0%,
-      rgba(255, 255, 255, 0.84) 30%,
-      rgba(255, 252, 245, 0.7) 60%,
-      rgba(255, 252, 245, 0.55) 100%
-    );
-  }
-  .hero-sun {
-    background: radial-gradient(circle, rgba(255, 236, 196, 0.75) 0%, rgba(255, 236, 196, 0) 70%);
-  }
-}
-/* Skyline backdrop: fades in, then drifts slowly like a video (transform only). */
-@keyframes hero-sky-in {
+@keyframes hero-panel-in {
   from {
-    opacity: 0;
+    transform: translate3d(32px, 16px, 0);
   }
   to {
-    opacity: 1;
+    transform: none;
   }
 }
-@keyframes hero-pan {
-  0% {
-    transform: scale(1.04) translate3d(-3%, 0.5%, 0);
+.motion-ok .hero-panel-in {
+  animation: hero-panel-in 1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--d, 0s);
+}
+/* soft glow just outside the ring, never over the white disc */
+/* Hero sky: soft blue at the top to near-white at the horizon, with very soft clouds. */
+.hero-sky {
+  background: linear-gradient(
+    180deg,
+    theme('colors.sky.top') 0%,
+    theme('colors.sky.horizon') 78%,
+    theme('colors.sky.horizon') 100%
+  );
+}
+.hero-text-wash {
+  background: linear-gradient(
+    180deg,
+    rgba(244, 250, 253, 0.78) 0%,
+    rgba(244, 250, 253, 0.7) 45%,
+    rgba(244, 250, 253, 0) 70%
+  );
+}
+@media (min-width: 1024px) {
+  .hero-text-wash {
+    background: linear-gradient(
+      90deg,
+      rgba(244, 250, 253, 0.8) 0%,
+      rgba(244, 250, 253, 0.68) 32%,
+      rgba(244, 250, 253, 0) 52%
+    );
   }
-  50% {
-    transform: scale(1.1) translate3d(0%, -1%, 0);
-  }
-  100% {
-    transform: scale(1.04) translate3d(3%, 0.5%, 0);
-  }
 }
-.motion-ok .hero-sky-in {
-  animation: hero-sky-in 1.6s ease-out both;
-}
-.hero-pan {
-  will-change: transform;
-}
-.motion-ok .hero-pan {
-  animation: hero-pan 36s ease-in-out infinite alternate;
-}
-[data-paused] .hero-pan {
-  animation-play-state: paused;
+.hero-cloud {
+  border-radius: 9999px;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0));
 }
 .hero-glass {
   background: rgba(255, 255, 255, 0.82);
@@ -509,15 +432,6 @@
   border: 1px solid rgba(255, 255, 255, 0.9);
   box-shadow: 0 12px 30px rgba(20, 38, 80, 0.1);
 }
-.hero-triad-glow {
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(255, 255, 255, 0.92) 0%,
-    rgba(255, 255, 255, 0.75) 48%,
-    rgba(255, 255, 255, 0) 70%
-  );
-}
-
 /* Gallery tiles fade up in a quick stagger (also on filter change). */
 .motion-ok .tile-in {
   animation: fade-up 0.6s var(--ease) both;

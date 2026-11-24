@@ -7,7 +7,7 @@ import tokens from '../../design/tokens.json';
 import { cx } from '../../lib/cx';
 import { FxScope, NeonCard } from '../fx/Effects';
 import { Img } from '../ui/Img';
-import { ArtistLabel, ReraChip, StatusChip } from '../ui/primitives';
+import { ReraChip, StatusChip } from '../ui/primitives';
 
 const t = tokens.colors;
 
@@ -47,7 +47,6 @@ function ShowcaseCard({ project, index }: { project: Project; index: number }) {
             <ReraChip rera={project.rera} tone="overlay" />
             <StatusChip status={project.status} className="shadow-soft" />
           </span>
-          <ArtistLabel />
         </Link>
 
         <div className="flex flex-1 flex-col px-3 pb-3 pt-6 sm:px-5 sm:pb-5">

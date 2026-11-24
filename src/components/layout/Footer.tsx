@@ -100,7 +100,7 @@ export function Footer() {
       <div className="container-content border-t border-white/10 py-8">
         <p className="max-w-[90ch] text-xs leading-relaxed text-white/60">
           <span className="font-semibold text-white/75">{f.disclaimerTitle}: </span>
-          {f.disclaimer} Images shown are artist&rsquo;s impressions.
+          {f.disclaimer}
         </p>
         <div className="mt-6 flex flex-wrap items-center justify-between gap-4 text-xs text-white/60">
           <p>

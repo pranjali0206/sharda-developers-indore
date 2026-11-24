@@ -20,7 +20,7 @@ import { lines } from '../../content/site';
 import type { LandmarkIcon, Project } from '../../content/projects';
 import { Img } from '../ui/Img';
 import { ButtonLink } from '../ui/Button';
-import { ArtistLabel, Eyebrow, HindiLine, Punch, ReraChip, StatusChip } from '../ui/primitives';
+import { Eyebrow, HindiLine, Punch, ReraChip, StatusChip } from '../ui/primitives';
 import { cx } from '../../lib/cx';
 import { Showcase } from './Showcase';
 import { PROJECT_TONE } from './tone';
@@ -148,7 +148,6 @@ export function ProjectHero({ project }: { project: Project }) {
               priority
               className="h-full w-full object-cover"
             />
-            <ArtistLabel className="bottom-auto left-auto right-3 top-3" />
           </div>
           {project.heroBadge && (
             <div className="absolute -bottom-6 left-4 flex items-center gap-3 rounded-2xl bg-white px-5 py-4 shadow-card ring-1 ring-line sm:left-8">

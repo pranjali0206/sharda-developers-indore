@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import { AnimatePresence, m } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import type { ImageName } from '../../generated/images';
-import { site } from '../../content/site';
 import { Img } from '../ui/Img';
 
 export interface Item {
@@ -89,7 +88,7 @@ export function Lightbox({
     >
       <div className="flex items-center justify-between p-4 text-white sm:p-6">
         <p className="text-sm text-white/75" aria-live="polite">
-          {index + 1} / {items.length} · {site.artist}
+          {index + 1} / {items.length}
         </p>
         <button ref={closeRef} type="button" onClick={onClose} className={btn}>
           <X aria-hidden className="h-5 w-5" strokeWidth={1.75} />

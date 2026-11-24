@@ -8,8 +8,6 @@
  * Rules: never invent numbers, never write "best / No. 1 / guaranteed returns".
  */
 
-import type { ImageName } from '../generated/images';
-
 export type Locale = 'en' | 'hi';
 export interface Bilingual {
   en: string;
@@ -89,11 +87,11 @@ const en = {
        * TBD — client is choosing. Any { lead, accent } fits, e.g.
        * { lead: 'Minutes from the city.', accent: 'Miles from the noise.' }.
        */
-      headline: { lead: 'Sharda Developers.', accent: 'A promise of excellence.' } as {
+      headline: { lead: 'Sharda Developers', accent: 'A promise of excellence.' } as {
         lead: string;
         accent: string;
       },
-      hindi: 'हर ईंट में उत्कृष्टता का वादा।',
+      hindi: 'जहाँ ख़्वाबों को उनकी छत मिलती है।',
       captions: {
         paradise: {
           line: 'Where connectivity meets calm',
@@ -111,16 +109,6 @@ const en = {
       book: 'Book a free site visit',
       bookShort: 'Book visit',
       openProject: { paradise: 'Open Sharda Paradise', greens: 'Open Sharda Greens' },
-      /** Shown bottom-left only if a licensed stock photo is used as the backdrop. */
-      representative: 'Representative image',
-      /**
-       * Backdrop photo. TODO: client to supply real photos of Sharda sites / homes
-       * (hero-bg-desktop 2880×1800, hero-bg-mobile 1170×2532). Until then the spec's
-       * fallbacks are used. Set isStock: true if a licensed stock photo is used.
-       */
-      // Client-supplied city skyline (rotated to landscape, blur baked in). Stock imagery:
-      // isStock shows the small 'Representative image' note.
-      photo: { image: 'hero-skyline', isStock: true } as { image: ImageName; isStock: boolean },
     },
     /** Key facts band (marquee). Only verified facts. */
     marquee: [
@@ -155,6 +143,52 @@ const en = {
       body: 'Gardens, a gazebo, sports courts, play areas and walking tracks are part of every Sharda colony, so every part of your day has somewhere to go.',
       cta: 'See all amenities',
     },
+    /** Client films (Nov 2026), in story order. Web encodes: scripts/encode-films.sh. */
+    films: {
+      eyebrow: 'Sharda Paradise on film',
+      h2a: 'See it',
+      h2b: 'before you visit.',
+      intro: 'जहाँ ख़ुशियों को अपना आँगन मिलता है।',
+      watch: 'Watch',
+      book: 'Book a site visit',
+      items: [
+        {
+          id: 'life',
+          title: 'Life at Sharda Paradise',
+          line: 'Families, evening walks and the jogging track.',
+          duration: '0:34',
+        },
+        {
+          id: 'tour',
+          title: 'The complete tour',
+          line: 'Gate, boundary wall, drainage, sports and more.',
+          duration: '1:37',
+        },
+        {
+          id: 'location',
+          title: 'The location',
+          line: 'On the map, beside the upcoming economic corridor.',
+          duration: '0:52',
+        },
+        {
+          id: 'connectivity',
+          title: 'Connectivity',
+          line: 'From the highway to your plot, by road.',
+          duration: '0:27',
+        },
+        {
+          id: 'infrastructure',
+          title: 'Infrastructure',
+          line: 'Concrete roads, underground electricity, drainage.',
+          duration: '0:31',
+        },
+      ] as {
+        id: 'life' | 'tour' | 'location' | 'connectivity' | 'infrastructure';
+        title: string;
+        line: string;
+        duration: string;
+      }[],
+    },
     location: {
       eyebrow: 'Location',
       h2a: "Indore's next address",
@@ -175,8 +209,7 @@ const en = {
       emailLabel: 'Email us',
     },
   },
-  proofNote:
-    "Images are artist's impressions. Sharda Paradise RERA No. P-IND-26-6360 · Sharda Greens RERA No. P-IND-23-4395.",
+  proofNote: 'Sharda Paradise RERA No. P-IND-26-6360 · Sharda Greens RERA No. P-IND-23-4395.',
   form: {
     title: 'Book a site visit',
     name: 'Your name',
@@ -280,7 +313,6 @@ const en = {
       'This is only a conceptual representation of the proposed project and not a legal document. Elevations, colors, furniture and amenities shown are indicative and may differ from the original. The company reserves all rights regarding this project.',
     rights: 'All rights reserved.',
   },
-  artist: "Artist's impression",
   status: { completed: 'Completed', ongoing: 'Ongoing' },
   thankYou: {
     h1: 'Thank you!',

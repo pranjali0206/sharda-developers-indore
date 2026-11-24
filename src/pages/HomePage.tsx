@@ -1,16 +1,17 @@
 import { Seo } from '../components/seo/Seo';
-import { HeroTriad } from '../components/hero/HeroTriad';
+import { HeroShowcase } from '../components/hero/HeroShowcase';
 import { AboutBand } from '../components/home/AboutBand';
 import { ProjectsShowcase } from '../components/home/ProjectsShowcase';
 import { AmenityArc } from '../components/home/AmenityArc';
+import { FilmReel } from '../components/home/FilmReel';
 import { LocationSection } from '../components/home/LocationSection';
 import { Faq, Testimonials } from '../components/home/Extras';
 import { VisitSection } from '../components/form/VisitSection';
 import { Deferred } from '../components/layout/Deferred';
 
 /**
- * Home: hero (approved triad design) → about (blue band) → projects (neon cards)
- * → life (sparkles, amenity arc) → location (retro grid) → visit (waves).
+ * Home: hero (split: headline + project panels) → about (blue band) → projects (neon cards)
+ * → life (sparkles, amenity arc) → films (reel wall) → location (retro grid) → visit (waves).
  */
 export function HomePage() {
   return (
@@ -21,7 +22,7 @@ export function HomePage() {
         path="/"
         image="/og-home.jpg"
       />
-      <HeroTriad />
+      <HeroShowcase />
       <Deferred>
         <AboutBand />
       </Deferred>
@@ -30,6 +31,9 @@ export function HomePage() {
       </Deferred>
       <Deferred>
         <AmenityArc />
+      </Deferred>
+      <Deferred>
+        <FilmReel />
       </Deferred>
       <Deferred>
         <LocationSection />

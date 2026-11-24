@@ -94,19 +94,6 @@ export function StatusChip({
   );
 }
 
-export function ArtistLabel({ className }: { className?: string }) {
-  return (
-    <span
-      className={cx(
-        'pointer-events-none absolute bottom-3 left-3 rounded-full bg-navy-950/80 px-2.5 py-1 text-[11px] font-medium tracking-wide text-white',
-        className,
-      )}
-    >
-      {site.artist}
-    </span>
-  );
-}
-
 /** Section heading pattern: eyebrow, H2 with an accented second phrase. */
 export function SectionHeading({
   eyebrow,
