@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod/mini';
@@ -8,7 +8,7 @@ import { config } from '../../config';
 import { site } from '../../content/site';
 import { projects } from '../../content/projects';
 import { track } from '../../lib/analytics';
-import { markLeadPending, submitLead, type ProjectChoice } from '../../lib/lead';
+import { submitLead, type ProjectChoice } from '../../lib/lead';
 import { cx } from '../../lib/cx';
 
 const e = site.form.errors;
@@ -27,8 +27,6 @@ const schema = z.object({
   project: z.enum(['paradise', 'greens', 'both']),
   visitDate: z.optional(z.string().check(z.refine((v) => !v || v >= todayISO(), e.date))),
   consent: z.boolean().check(z.refine((v) => v, e.consent)),
-  /** Honeypot: humans never see or fill this. */
-  company: z.optional(z.string()),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -46,7 +44,6 @@ export function SiteVisitForm({ defaultProject = 'both' }: { defaultProject?: Pr
   const f = site.form;
   const uid = useId();
   const id = (k: string) => `${uid}-${k}`;
-  const navigate = useNavigate();
   const [sendError, setSendError] = useState(false);
   const [minDate, setMinDate] = useState<string | undefined>(undefined);
   const started = useRef(false);
@@ -65,7 +62,6 @@ export function SiteVisitForm({ defaultProject = 'both' }: { defaultProject?: Pr
       project: defaultProject,
       visitDate: '',
       consent: false,
-      company: '',
     },
   });
 
@@ -84,11 +80,19 @@ export function SiteVisitForm({ defaultProject = 'both' }: { defaultProject?: Pr
 
   const onSubmit = async (v: FormValues) => {
     setSendError(false);
-    if (v.company) {
-      // Bot filled the honeypot: pretend success, send nothing, fire no conversion.
-      navigate(`/thank-you?project=${v.project}`);
-      return;
-    }
+
+    // Build the WhatsApp message with every detail the visitor entered.
+    const label = CHOICES.find((c) => c.value === v.project)?.label ?? v.project;
+    const message = [
+      'New site visit request — Sharda Developers',
+      '',
+      `Name: ${v.name.trim()}`,
+      `Mobile: +91${v.mobile}`,
+      `Interested in: ${label}`,
+      `Preferred date: ${v.visitDate || 'Not specified'}`,
+    ].join('\n');
+
+    // Best-effort: also record the lead to the endpoint (e.g. a Google Sheet) if configured.
     try {
       await submitLead({
         name: v.name.trim(),
@@ -96,12 +100,12 @@ export function SiteVisitForm({ defaultProject = 'both' }: { defaultProject?: Pr
         project: v.project,
         visitDate: v.visitDate || undefined,
       });
-      markLeadPending(v.project);
-      navigate(`/thank-you?project=${v.project}`);
     } catch (err) {
       console.error(err);
-      setSendError(true);
     }
+
+    // Redirect this tab straight to WhatsApp (+91 91792 00110) with the details filled in.
+    window.location.href = config.whatsapp.href(message);
   };
 
   const mobileReg = register('mobile');
@@ -232,18 +236,6 @@ export function SiteVisitForm({ defaultProject = 'both' }: { defaultProject?: Pr
               {errors.visitDate.message}
             </p>
           )}
-        </div>
-
-        {/* Honeypot (hidden from people and assistive tech). */}
-        <div aria-hidden className="absolute -left-[9999px] h-px w-px overflow-hidden">
-          <label htmlFor={id('company')}>Company</label>
-          <input
-            id={id('company')}
-            type="text"
-            tabIndex={-1}
-            autoComplete="off"
-            {...register('company')}
-          />
         </div>
 
         <div>

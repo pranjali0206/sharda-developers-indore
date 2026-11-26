@@ -202,14 +202,10 @@ export function FilmReel() {
           </p>
         </div>
 
-        <ul className="-mx-5 mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-3 [scrollbar-width:none] lg:mx-0 lg:grid lg:grid-cols-5 lg:gap-5 lg:overflow-visible lg:px-0">
+        {/* Vertical grid so the page scrolls normally (no horizontal-scroll trap on touch). */}
+        <ul className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 lg:gap-5">
           {f.items.map((film, i) => (
-            <li
-              key={film.id}
-              data-reveal
-              style={{ '--d': `${i * 0.08}s` } as CSSProperties}
-              className="w-[62vw] max-w-[240px] shrink-0 snap-center sm:w-[220px] lg:w-auto lg:max-w-none"
-            >
+            <li key={film.id} data-reveal style={{ '--d': `${i * 0.08}s` } as CSSProperties}>
               <button
                 ref={(el) => {
                   cards.current[i] = el;
