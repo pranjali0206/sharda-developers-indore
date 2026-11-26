@@ -1,11 +1,13 @@
-import type { CSSProperties } from 'react';
+import { useRef, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 import { site } from '../../content/site';
 import { projects } from '../../content/projects';
 import type { ImageName } from '../../generated/images';
 import { cx } from '../../lib/cx';
+import { usePauseWhenHidden } from '../../hooks/usePauseWhenHidden';
 import { Img } from '../ui/Img';
+import { Sparkles, WavyBackground } from '../fx/Effects';
 import { HeroBackground } from './HeroBackground';
 
 const d = (s: number) => ({ '--d': `${s}s` }) as CSSProperties;
@@ -16,20 +18,25 @@ const d = (s: number) => ({ '--d': `${s}s` }) as CSSProperties;
  *    (≤ 860px, and ≤ 44vw so cards stay ~0.85–0.9 wide-to-tall). Paradise: left 0, top 0,
  *    61% × 92%. Greens: right 0, top 16%, 50% × 84%, in front. Paradise's slanted right
  *    edge runs just under Greens' parallel left edge, forming one seam.
- *  - The gate render (16:9) sits at the bottom at full card width, never cropped or
- *    stretched; the project colour (deep at the top corner, lightening downward) fills
- *    the space above, and the photo's top 16% dissolves into it via a mask (no tint).
+ *  - The gate render fills the card from just below the name label to the bottom
+ *    (object-cover, centred, so the signage stays in view). The project colour is a
+ *    band across the top only: deep at the corner, lightening into the photo's own sky
+ *    tone, and the photo's top edge dissolves into it via a mask (no tint).
  */
 interface Card {
   slug: 'paradise' | 'greens';
   image: ImageName;
   /** Project colour: deep at the top corner, lightening down toward the gate photo */
   fill: string;
+  /** Where the photo sits inside the card: top offset + horizontal focus on the signage */
+  photo: string;
   /** Desktop/tablet box inside the group */
   box: string;
   labelSide: 'left' | 'right';
   rera: string;
   delay: number;
+  /** Neon aura gradient stops (deep → bright → deep) drifting behind the card. */
+  aura: [string, string, string];
 }
 
 const CLIP = 'polygon(14% 9%, 100% 0%, 86% 91%, 0% 100%)';
@@ -39,20 +46,28 @@ const CARDS: Card[] = [
   {
     slug: 'paradise',
     image: 'paradise-gate',
-    fill: 'linear-gradient(165deg, #081343 0%, #142E86 30%, #2A55D6 62%, #7C9CF0 100%)',
-    box: 'left-0 top-0 h-[88%] w-[64%] sm:h-[86%] sm:w-[58%] lg:h-[92%] lg:w-[61%]',
+    // navy → royal blue → the render's pale sky (#80B8DC–#C3E1F0)
+    fill: 'linear-gradient(172deg, #081343 0%, #173394 15%, #3566D2 27%, #8DBDE0 40%, #A9D2EC 100%)',
+    // Greens overlaps this card's right side, so pull the signage left
+    photo: 'top-[33%] lg:top-[24%] [&_img]:object-[65%_50%] lg:[&_img]:object-[52%_50%]',
+    box: 'md:left-0 md:top-0 md:h-[86%] md:w-[62%] lg:h-[92%] lg:w-[61%]',
     labelSide: 'left',
     rera: 'left-[6%] bottom-[9%] lg:left-[7%] lg:bottom-[12%]',
     delay: 0.3,
+    aura: ['#0b1c57', '#3f7fe8', '#1b3fae'],
   },
   {
     slug: 'greens',
     image: 'g-gate-day',
-    fill: 'linear-gradient(165deg, #01260F 0%, #05501F 30%, #12803C 62%, #6CC08C 100%)',
-    box: 'right-0 top-[4%] z-10 h-[96%] w-[64%] sm:top-[3%] sm:h-[97%] sm:w-[58%] lg:top-[16%] lg:h-[84%] lg:w-[50%]',
+    // forest green → teal → the render's clear blue sky (#5EACEF–#72BDF6)
+    fill: 'linear-gradient(172deg, #01260F 0%, #075A24 15%, #17844F 26%, #3FA0B4 35%, #64B6EE 44%, #6CBCF4 100%)',
+    // narrower card: start the photo a little lower so the full sign fits across
+    photo: 'top-[33%] lg:top-[34%] [&_img]:object-[47%_50%]',
+    box: 'md:right-0 md:top-[3%] md:z-10 md:h-[97%] md:w-[62%] lg:top-[16%] lg:h-[84%] lg:w-[50%]',
     labelSide: 'right',
     rera: 'right-[12%] bottom-[14%] lg:right-[19%] lg:bottom-[13%]',
     delay: 0.45,
+    aura: ['#07532a', '#2bbd86', '#0b7a37'],
   },
 ];
 
@@ -62,30 +77,77 @@ function ProjectCard({ c }: { c: Card }) {
   const clip = '[clip-path:var(--clip-sm)] lg:[clip-path:var(--clip)]';
   return (
     <div
-      className={cx('hero-panel-in absolute', c.box)}
-      style={{ '--clip': CLIP, '--clip-sm': CLIP_SM, '--d': `${c.delay}s` } as CSSProperties}
+      className={cx('hero-panel-in w-full md:absolute', c.box)}
+      style={
+        {
+          '--clip': CLIP,
+          '--clip-sm': CLIP_SM,
+          '--d': `${c.delay}s`,
+          '--c1': c.aura[0],
+          '--c2': c.aura[1],
+          '--c3': c.aura[2],
+        } as CSSProperties
+      }
     >
-      {/* Unclipped parent carries the shadow (box-shadow would be cut by clip-path). */}
+      {/* Drifting neon-gradient aura behind the fan card (tablets only; not the stack). */}
+      <span aria-hidden className="fx-hero-aura absolute inset-[-14%] -z-10 hidden md:block lg:hidden" />
+
       <Link
         to={project.path}
         data-hero-card={c.slug}
         aria-label={`${project.name} — view project`}
-        className="group block h-full w-full transition duration-300 ease-brand [filter:drop-shadow(0_24px_40px_rgba(20,35,90,0.18))] hover:-translate-y-1.5 hover:[filter:drop-shadow(0_32px_48px_rgba(20,35,90,0.28))]"
+        className="group block w-full transition duration-300 ease-brand md:h-full md:[filter:drop-shadow(0_24px_40px_rgba(20,35,90,0.18))] md:hover:-translate-y-1.5 md:hover:[filter:drop-shadow(0_32px_48px_rgba(20,35,90,0.28))]"
       >
-        {/* white seam: same shape, card inset by 4px */}
-        <span className={cx('relative block h-full w-full bg-white', clip)}>
+        {/* ---- Mobile (< md): big rectangle with a neon gradient border ---- */}
+        <span className="fx-neon-border fx-neon-border-anim block rounded-2xl p-[5px] shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-transform duration-200 active:scale-[0.98] md:hidden">
+          <span className="block overflow-hidden rounded-[calc(1rem-5px)] bg-white">
+            {/* full gate image (landscape, not cropped tall like before) */}
+            <span className="block aspect-[16/9] w-full overflow-hidden">
+              <Img
+                name={c.image}
+                alt={`${project.name} entrance gate`}
+                sizes="100vw"
+                priority
+                className="h-full w-full object-cover object-center transition duration-300 group-hover:brightness-110"
+              />
+            </span>
+            <span className="flex items-center justify-between gap-3 px-4 py-3">
+              <span className="flex flex-col">
+                <span className="font-display text-base font-semibold leading-tight text-navy-900">
+                  {project.name}
+                </span>
+                <span className="mt-1.5 flex items-center gap-1 text-[12px] font-semibold text-[#2563eb]">
+                  {site.home.hero.viewProject}
+                  <ChevronDown aria-hidden className="h-3.5 w-3.5" strokeWidth={2.4} />
+                </span>
+              </span>
+              <span className="whitespace-nowrap rounded-full bg-navy-900 px-2.5 py-1 text-[11px] font-bold text-white shadow-soft">
+                RERA {project.rera}
+              </span>
+            </span>
+          </span>
+        </span>
+
+        {/* ---- Tablet / desktop (≥ md): the original tilted fan card, unchanged ---- */}
+        {/* Unclipped parent carries the shadow (box-shadow would be cut by clip-path). */}
+        <span className={cx('relative hidden h-full w-full bg-white md:block', clip)}>
           <span
             className={cx('absolute inset-[4px] block overflow-hidden', clip)}
             style={{ background: c.fill }}
           >
-            {/* photo at the bottom, full width, natural 16:9; its top edge dissolves into
-                the colour (a mask, so the photo itself is never tinted) */}
-            <span className="absolute inset-x-0 bottom-0 block aspect-[16/9] [mask-image:linear-gradient(to_bottom,transparent_0%,black_16%)]">
+            {/* photo fills the card below the name label; its top edge dissolves into
+                the colour band (a mask, so the photo itself is never tinted) */}
+            <span
+              className={cx(
+                'absolute inset-x-0 bottom-0 block [mask-image:linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.6)_7%,black_15%)]',
+                c.photo,
+              )}
+            >
               <Img
                 name={c.image}
                 alt={`${project.name} entrance gate`}
                 sizes="(min-width: 1024px) 720px, 66vw"
-                priority={c.slug === 'paradise'}
+                priority
                 className="h-full w-full object-cover transition-transform duration-[1400ms] ease-brand group-hover:scale-[1.03]"
               />
             </span>
@@ -131,13 +193,21 @@ function ProjectCard({ c }: { c: Card }) {
  */
 export function HeroShowcase() {
   const h = site.home.hero;
+  const ref = useRef<HTMLElement>(null);
+  usePauseWhenHidden(ref);
   return (
     <section
+      ref={ref}
       aria-labelledby="hero-title"
       data-section="hero"
       className="relative -mt-[74px] overflow-hidden pb-[104px] pt-[104px] md:pb-28 lg:-mt-[81px] lg:flex lg:h-[100svh] lg:min-h-[721px] lg:items-center lg:pb-[7vh] lg:pt-[81px]"
     >
       <HeroBackground />
+      {/* Animated wave base along the hero bottom (phones/tablets). */}
+      <WavyBackground
+        className="bottom-0 h-[128px] lg:hidden"
+        colors={['#2d5fc4', '#16295e', '#1f9a52']}
+      />
 
       <div className="relative z-[1] grid w-full items-center gap-10 px-4 lg:grid-cols-[1fr_60%] lg:gap-8 lg:px-6 xl:px-16">
         {/* Copy — centred on phones/tablets; on desktop every line starts on the same x */}
@@ -148,14 +218,17 @@ export function HeroShowcase() {
             style={d(0.05)}
           >
             {/* the big “S” overhangs slightly; pull it back onto the column line */}
-            <span className="block lg:-ml-[0.035em]">Sharda</span>{' '}
-            <span className="block lg:-ml-[0.035em]">
+            <span className="fx-hero-shine block lg:-ml-[0.035em]">Sharda</span>{' '}
+            <span className="fx-hero-shine block lg:-ml-[0.035em]">
               Developers<span className="lg:hidden">.</span>
             </span>{' '}
             <span className="mt-3 block text-[clamp(20px,5.6vw,32px)] font-semibold leading-[1.2] tracking-[-0.01em] text-green-700 lg:mt-[18px] lg:text-[clamp(24px,2.4vw,38px)] lg:font-semibold lg:leading-[1.15] lg:tracking-[-0.01em]">
               {h.headline.accent}
             </span>
           </h1>
+
+          {/* Twinkling sparkles under the headline (phones/tablets). */}
+          <Sparkles className="mt-4 lg:hidden" />
 
           <span
             aria-hidden
@@ -187,8 +260,8 @@ export function HeroShowcase() {
           </div>
         </div>
 
-        {/* Project cards */}
-        <div className="relative mx-auto aspect-[1.13] w-full max-w-[680px] sm:aspect-[1.55] lg:aspect-auto lg:h-[clamp(440px,min(calc((100svh-81px)*0.9),44vw),860px)] lg:max-w-none">
+        {/* Project cards — two independent big rectangles stacked on mobile; fan at md+. */}
+        <div className="mx-auto flex w-full max-w-[560px] flex-col gap-4 md:block md:max-w-[680px] md:relative md:aspect-[1.35] lg:aspect-auto lg:h-[clamp(440px,min(calc((100svh-81px)*0.9),44vw),860px)] lg:max-w-none">
           {CARDS.map((c) => (
             <ProjectCard key={c.slug} c={c} />
           ))}

@@ -443,6 +443,118 @@
   opacity: 0;
 }
 
+/* ------------------------------------------------------------------------- */
+/* Hero upgrade — drifting mesh, card neon auras, headline shine (mobile).    */
+/* All gated by .motion-ok.loops-on and paused off-screen via [data-paused]   */
+/* (the hero sets it through usePauseWhenHidden); reduced-motion turns them    */
+/* off through the global block below. Only transform / background-position.  */
+/* ------------------------------------------------------------------------- */
+
+/* Mesh-gradient blobs slowly float on alternate loops. */
+@keyframes fx-hero-blob {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(var(--mx, 6%), var(--my, -5%), 0) scale(1.28);
+  }
+}
+.fx-hero-blob {
+  border-radius: 9999px;
+  filter: blur(42px);
+  opacity: 0.5;
+}
+.motion-ok.loops-on .fx-hero-blob {
+  animation: fx-hero-blob var(--dur, 16s) ease-in-out infinite alternate;
+  animation-delay: var(--d, 0s);
+  will-change: transform;
+}
+
+/* Neon aura: a soft conic gradient slowly rotating behind each project card. */
+@keyframes fx-hero-aura {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.fx-hero-aura {
+  background: conic-gradient(from 0deg, var(--c1), var(--c2), var(--c3), var(--c2), var(--c1));
+  filter: blur(22px);
+  opacity: 0.6;
+  border-radius: 38% 42% 40% 44%;
+}
+.motion-ok.loops-on .fx-hero-aura {
+  animation: fx-hero-aura var(--dur, 12s) linear infinite;
+  will-change: transform;
+}
+
+/* A light band sweeps across the "Sharda Developers" headline (phones/tablets). */
+@keyframes fx-hero-shine {
+  0%,
+  18% {
+    background-position: 135% 0;
+  }
+  82%,
+  100% {
+    background-position: -135% 0;
+  }
+}
+.motion-ok .fx-hero-shine {
+  background-image: linear-gradient(
+    100deg,
+    theme('colors.navy.900') 0%,
+    theme('colors.navy.900') 38%,
+    theme('colors.royal.600') 47%,
+    #eaf2ff 50%,
+    theme('colors.royal.600') 53%,
+    theme('colors.navy.900') 62%,
+    theme('colors.navy.900') 100%
+  );
+  background-size: 260% 100%;
+  background-position: 135% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.motion-ok.loops-on .fx-hero-shine {
+  animation: fx-hero-shine 5.5s ease-in-out infinite;
+}
+@media (min-width: 1024px) {
+  /* Desktop headline keeps its original solid navy — unchanged design. */
+  .motion-ok .fx-hero-shine {
+    background: none;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    -webkit-text-fill-color: theme('colors.navy.900');
+    color: theme('colors.navy.900');
+    animation: none;
+  }
+}
+
+/* Mobile project cards: neon gradient border with a slow motion-safe drift. */
+.fx-neon-border {
+  background-image: linear-gradient(135deg, #22d3ee, #34d399, #3b82f6, #22d3ee);
+  background-size: 220% 220%;
+  background-position: 0% 50%;
+}
+@keyframes fx-neon-border {
+  to {
+    background-position: 220% 50%;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .fx-neon-border-anim {
+    animation: fx-neon-border 9s linear infinite;
+  }
+}
+
+/* Mobile (< md): the stacked cards fade up (staggered) instead of the fan's side slide-in.
+   Transform/opacity only, so one card's entrance never shifts the other's layout. */
+@media (max-width: 767px) {
+  .motion-ok .hero-panel-in {
+    animation: hero-fade-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) var(--d, 0s) both;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

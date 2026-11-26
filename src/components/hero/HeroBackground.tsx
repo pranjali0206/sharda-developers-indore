@@ -1,6 +1,48 @@
+import type { CSSProperties } from 'react';
 import { images } from '../../generated/images';
 
 const OPT = '/assets/optimized';
+
+/**
+ * Drifting mesh-gradient blobs (phones/tablets). Three large blurred colour fields —
+ * navy, blue, green — slowly float on alternate loops behind the hero content; the
+ * white text-wash above keeps the headline crisp. Paused off-screen via the hero's
+ * data-paused (set by usePauseWhenHidden) through the [class*='fx-'] rule.
+ */
+const BLOBS: CSSProperties[] = [
+  {
+    left: '-18%',
+    top: '-8%',
+    width: '72%',
+    height: '52%',
+    background: 'radial-gradient(circle at center, #16295e, transparent 70%)',
+    '--dur': '15s',
+    '--mx': '9%',
+    '--my': '7%',
+  } as CSSProperties,
+  {
+    right: '-20%',
+    top: '2%',
+    width: '70%',
+    height: '50%',
+    background: 'radial-gradient(circle at center, #2d5fc4, transparent 70%)',
+    '--dur': '18s',
+    '--d': '-5s',
+    '--mx': '-10%',
+    '--my': '9%',
+  } as CSSProperties,
+  {
+    left: '10%',
+    bottom: '-14%',
+    width: '82%',
+    height: '54%',
+    background: 'radial-gradient(circle at center, #1f9a52, transparent 72%)',
+    '--dur': '17s',
+    '--d': '-9s',
+    '--mx': '8%',
+    '--my': '-8%',
+  } as CSSProperties,
+];
 const foliage = images['hero-foliage'];
 /**
  * Optional sky photo: drop it in as public/assets/hero-sky.jpg and run `npm run images`.
@@ -22,6 +64,14 @@ export function HeroBackground() {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
       <div className="hero-sky absolute inset-0" />
+
+      {/* drifting neon mesh gradient (phones/tablets) */}
+      <div className="absolute inset-0 overflow-hidden lg:hidden">
+        {BLOBS.map((style, i) => (
+          <div key={i} className="fx-hero-blob absolute" style={style} />
+        ))}
+      </div>
+
       {sky && (
         <picture>
           <source type="image/avif" srcSet={skySet('avif')} sizes="100vw" />
